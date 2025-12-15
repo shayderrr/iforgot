@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jamal's Game Hub</title>
+    <link rel="icon" type="image/png" href="https://iili.io/fHrIxvj.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+      :root {
+        --background: hsl(260, 40%, 8%);
+        --foreground: hsl(300, 20%, 95%);
+        --muted-foreground: hsl(300, 10%, 60%);
+        --accent: hsl(315, 80%, 70%);
+        --primary: hsl(330, 100%, 60%);
+        --font-mono: 'Orbitron', 'Menlo', monospace;
+        --font-sans: 'Rajdhani', 'Open Sans', sans-serif;
+      }
+    
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-sans);
+        background-color: var(--background);
+        color: var(--foreground);
+        overflow-x: hidden;
+      }
+
+      .starfield {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 1; pointer-events: none;
+      }
+    
+      .star {
+        position: absolute; background: white; border-radius: 50%;
+        animation: twinkle 3s infinite;
+      }
+    
+      @keyframes twinkle {
+        0%, 100% { opacity: 0.3; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1.2); }
+      }
+    
+      .gradient-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(ellipse at center, rgba(255, 0, 128, 0.1) 0%, transparent 70%);
+        pointer-events: none; z-index: 2;
+      }
+    
+      .container {
+        position: relative; z-index: 10;
+        min-height: 100vh;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        padding: 2rem;
+        padding-top: 6rem; 
+        box-sizing: border-box; 
+      }
+    
+      .neon-title {
+        font-family: var(--font-mono); font-weight: 900;
+        text-transform: uppercase; letter-spacing: 0.2em; color: #fff;
+        font-size: clamp(3rem, 15vw, 9rem); text-align: center;
+        margin-bottom: 1rem;margin-top: 2rem;
+        text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 30px #ff0080, 0 0 40px #ff0080, 0 0 70px #ff0080, 0 0 80px #ff0080, 0 0 100px #ff0080, 0 0 150px #ff0080;
+        animation: neonFlicker 2s infinite alternate;
+        transition: animation-duration 0.3s;
+      }
+    
+      .neon-title:hover { animation-duration: 0.5s; }
+    
+      @keyframes neonFlicker {
+        0%, 100% { text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 30px #ff0080, 0 0 40px #ff0080, 0 0 70px #ff0080, 0 0 80px #ff0080, 0 0 100px #ff0080, 0 0 150px #ff0080; }
+        50% { text-shadow: 0 0 5px #ff3366, 0 0 15px #ff3366, 0 0 25px #ff3366, 0 0 35px #ff3366, 0 0 60px #ff3366, 0 0 70px #ff3366, 0 0 90px #ff3366, 0 0 120px #ff3366; }
+      }
+    
+      .subtitle {
+        color: var(--muted-foreground); font-size: clamp(1rem, 3vw, 1.5rem);
+        font-family: var(--font-mono); opacity: 0.8;
+        text-align: center; margin-bottom: 4rem;
+      }
+    
+      .links-container {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem; max-width: 900px;
+        margin-bottom: 4rem; justify-content: center;
+      }
+    
+      .proxy-link {
+        background-color: var(--background);
+        background-image: linear-gradient(45deg, rgba(255, 0, 128, 0.1), rgba(128, 0, 255, 0.1));
+        border: 2px solid rgba(255, 0, 128, 0.3); color: #fff;
+        padding: 1.5rem 1rem; border-radius: 12px;
+        text-decoration: none; font-family: var(--font-mono);
+        font-weight: 600; letter-spacing: 0.1em;
+        transition: all 0.3s ease; position: relative;
+        overflow: hidden; display: flex;
+        flex-direction: column; align-items: center;
+        justify-content: center; text-align: center;
+        min-height: 8rem; max-height: 8rem;
+        word-break: break-word; cursor: pointer;
+      }
+    
+      .proxy-link::before {
+        content: ''; position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+      }
+    
+      .proxy-link:hover::before { left: 100%; }
+    
+      .proxy-link:hover {
+        border-color: #ff0080;
+        box-shadow: 0 0 20px rgba(255, 0, 128, 0.5), inset 0 0 20px rgba(255, 0, 128, 0.1);
+        transform: translateY(-2px);
+      }
+      
+      .proxy-link-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+    
+      .proxy-link-desc {
+        font-size: 0.875rem;
+        font-weight: normal; 
+        opacity: 0.7;
+        letter-spacing: normal;
+      }
+    </style>
+</head>
+<body>
+
+<!-- =================== MENU START=================== -->
+<style>
+    .main-nav {font-family: var(--font-sans);background-color: rgba(15, 12, 25, 0.85);backdrop-filter: blur(10px);border-bottom: 2px solid rgba(255, 0, 128, 0.3);box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);width: 100%;position: fixed;top: -80px; left: 0;z-index: 1000;transition: top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);padding: 0.5rem 0;}
+    .main-nav.visible {top: 0; }
+    .nav-content {display: flex;align-items: center;padding: 0 2rem;max-width: 1200px;margin: 0 auto;}
+    .nav-logo-title {display: flex;align-items: center;gap: 1rem;text-decoration: none;}
+    .nav-logo-title img { height: 40px;}
+    .nav-logo-title .site-title {font-family: var(--font-mono);font-size: 1.5rem;font-weight: 700;color: var(--foreground);text-shadow: 0 0 8px var(--primary);}
+    .nav-links {list-style: none;margin: 0;padding: 0;display: flex;gap: 0.5rem;margin-left: auto; }
+    .nav-links li { position: relative; }
+    .nav-links a {display: flex; align-items: center; color: var(--muted-foreground);text-decoration: none;padding: 0.8rem 1rem;font-size: 1rem;font-weight: 600;border-radius: 8px;transition: all 0.3s ease;}
+    .nav-links a:hover,.nav-links a.active {color: var(--foreground);background-color: rgba(255, 0, 128, 0.1);text-shadow: 0 0 5px var(--primary);}
+    .nav-links a i:not(.fa-caret-down) { margin-right: 8px; }
+    .nav-links a i.fa-caret-down { margin-left: 0.3rem; }
+    .dropdown-content {display: none;position: absolute;top: 100%;left: 0;background-color: rgba(25, 22, 40, 0.95);border: 1px solid rgba(255, 0, 128, 0.3);border-radius: 0 0 8px 8px;min-width: 200px;box-shadow: 0 8px 16px rgba(0,0,0,0.3);z-index: 1;padding: 0.5rem 0;overflow: hidden;}
+    .dropdown:hover .dropdown-content { display: block; }
+    .dropdown-content a {width: 100%;text-align: left;border-radius: 0;padding: 0.8rem 1.5rem;box-sizing: border-box;}
+    .nav-toggle-btn {position: fixed;top: 1rem;right: 2rem;z-index: 1001;background: rgba(15, 12, 25, 0.85);border: 2px solid var(--muted-foreground);color: var(--muted-foreground);border-radius: 8px;width: 40px;height: 40px;cursor: pointer;font-size: 1.2rem;transition: all 0.3s ease;}
+    .nav-toggle-btn:hover {border-color: var(--primary);color: var(--primary);box-shadow: 0 0 10px var(--primary);}
+    .nav-toggle-btn .arrow-up { display: none; }
+    .nav-toggle-btn.active .arrow-up { display: inline; }
+    .nav-toggle-btn.active .arrow-down { display: none; }
+</style>
+<nav id="mainNav" class="main-nav">
+  <div class="nav-content">
+    <a href="index.html" class="nav-logo-title">
+      <img src="https://iili.io/fHrIxvj.png" alt="Site Logo">
+      <span class="site-title">Jamal's Game Hub</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+      <li><a href="media.html"><i class="fas fa-tv"></i>Media</a></li>
+      <li><a href="vortex.html"><i class="fas fa-comment-dots"></i>Vortex</a></li>
+      <li class="dropdown">
+        <a href="javascript:void(0)"><i class="fas fa-rocket"></i>Proxies<i class="fas fa-caret-down"></i></a>
+        <div class="dropdown-content">
+          <a href="proxyinfo.html">Proxies Info</a>
+          <a href="proxies.html">Proxies</a>
+          <a href="proxydrop.html">Proxy Link Drops</a>
+        </div>
+      </li>
+      <li class="dropdown">
+        <a href="javascript:void(0)"><i class="fas fa-gamepad"></i>Game Sites<i class="fas fa-caret-down"></i></a>
+        <div class="dropdown-content">
+          <a href="gamesites.html">Game Sites</a>
+          <a href="gamesiteslinkdrop.html">Game Site Link Drops</a>
+        </div>
+      </li>
+      <li class="dropdown">
+        <a href="javascript:void(0)"><i class="fas fa-tools"></i>Tools<i class="fas fa-caret-down"></i></a>
+        <div class="dropdown-content">
+          <a href="durlgen.html">Data URL Gen</a>
+          <a href="abtblnk.html">About:blank tab opener</a>
+          <a href="viewer.html">HTML viewer</a>
+          <a href="translate.html">Translator</a>
+          <a href="unitconverter.html">Unit Converter</a>
+          <a href="stopwatch.html">Stopwatch</a>
+        </div>
+      </li>
+      <li class="dropdown">
+        <a href="javascript:void(0)"><i class="fas fa-info-circle"></i>Important<i class="fas fa-caret-down"></i></a>
+        <div class="dropdown-content">
+          <a href="staff.html">Staff</a>
+          <a href="updatelog.html">Update Log</a>
+          <a href="partners.html">Partners</a>
+          <a href="credits.html">Credits</a>
+          <a href="contact.html">Contact Form</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+<button id="navToggle" class="nav-toggle-btn">
+    <i class="fas fa-chevron-down arrow-down"></i>
+    <i class="fas fa-chevron-up arrow-up"></i>
+</button>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.navMenuLoaded) return; window.navMenuLoaded = true;
+        const mainNav = document.getElementById('mainNav');
+        const navToggle = document.getElementById('navToggle');
+        function toggleMenu() { mainNav.classList.toggle('visible'); navToggle.classList.toggle('active'); }
+        navToggle.addEventListener('click', toggleMenu);
+        setTimeout(() => { mainNav.classList.add('visible'); navToggle.classList.add('active'); }, 100); 
+    });
+</script>
+<!-- ===========================END OF MENU=======================-->
+
+
+
+  <div class="starfield" id="starfield"></div>
+  <div class="gradient-overlay"></div>
+
+  <div class="container">
+    <div>
+      <h1 class="neon-title" id="title">PROXIES</h1>
+      <div class="subtitle">// Access the web without limits</div>
+    </div>
+    <div class="links-container" id="links-container">
+
+            <a class="proxy-link" data-url="https://bog.fyinx.wtf/">
+        <div class="proxy-link-title">truffled</div>
+        <div class="proxy-link-desc">simple but good</div>
+      </a>
+      <a class="proxy-link" data-url="https://frogiesarcade.net/">
+        <div class="proxy-link-title">frogie's arcade</div>
+        <div class="proxy-link-desc">🐸🐸🐸</div>
+      </a>
+      <a class="proxy-link" data-url="https://khan-unitedu.lessonstogo.help.cdn.cloudflare.net/">
+        <div class="proxy-link-title">DogeUB</div>
+        <div class="proxy-link-desc">biggest proxy network</div>
+      </a>
+      <a class="proxy-link" data-url="https://www.rateavon.je/error.php">
+        <div class="proxy-link-title">Phproxy</div>
+        <div class="proxy-link-desc">bad but it works</div>
+      </a>
+      <a class="proxy-link" data-url="https://d3t2h4p23oactb.cloudfront.net/">
+        <div class="proxy-link-title">Waves</div>
+        <div class="proxy-link-desc">cloudfront so underrated</div>
+      </a>
+      <a class="proxy-link" data-url="https://keenalgebra.filsza.pl/">
+        <div class="proxy-link-title">Shadow</div>
+        <div class="proxy-link-desc">personal favorite</div>
+      </a>
+      <a class="proxy-link" data-url="https://ec2-13-59-62-151.us-east-2.compute.amazonaws.com/">
+        <div class="proxy-link-title">Secured V3</div>
+        <div class="proxy-link-desc">sleek</div>
+      </a>
+      <a class="proxy-link" data-url="https://quizlet.one.cdn.cloudflare.net/#home">
+        <div class="proxy-link-title">UniUB V4</div>
+        <div class="proxy-link-desc">its purple!!!</div>
+      </a>
+      <a class="proxy-link" data-url="https://api.bcsdny.com.de/">
+        <div class="proxy-link-title">Void Network V5</div>
+        <div class="proxy-link-desc">good one!!!</div>
+      </a>
+      <a class="proxy-link" data-url="https://web.tovamiasto.com/">
+        <div class="proxy-link-title">Space</div>
+        <div class="proxy-link-desc">they never link drop :(</div>
+      </a>
+      <a class="proxy-link" data-url="https://site.tovamiasto.com/">
+        <div class="proxy-link-title">DayDreamX</div>
+        <div class="proxy-link-desc">this is fire</div>
+      </a>
+      <a class="proxy-link" data-url="http://alittlelinkersecret.yafers.org/">
+        <div class="proxy-link-title">US5</div>
+        <div class="proxy-link-desc">voucan more like toucan</div>
+      </a>
+      </div>
+  </div>
+
+<script>
+  function createStarfield() {
+    const starfield = document.getElementById('starfield');
+    if (!starfield) return;
+    starfield.innerHTML = ''; 
+    for (let i = 0; i < 150; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      starfield.appendChild(star);
+    }
+  }
+
+  function handleProxyClick(event) {
+    event.preventDefault(); 
+    const targetUrl = event.currentTarget.dataset.url;
+    const newTab = window.open('about:blank', '_blank');
+    if (newTab) {
+      const iframeHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title>Proxy</title><style>html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;background-color:#120A20;}iframe{border:none;width:100%;height:100%;display:block;}</style></head>
+        <body>
+        <iframe src="${targetUrl}"></iframe></body></html>`;
+      newTab.document.open();
+      newTab.document.write(iframeHtml);
+      newTab.document.close();
+    } else {
+      alert("Please allow pop-ups for this site.");
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    createStarfield();
+    const proxyLinks = document.querySelectorAll('.proxy-link');
+    proxyLinks.forEach(link => link.addEventListener('click', handleProxyClick));
+  });
+</script>
+</body>
+</html>
